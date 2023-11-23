@@ -100,6 +100,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Use the built-in authentication system
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Redirect to the login page for authentication
+LOGIN_URL = 'login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
