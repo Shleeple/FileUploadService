@@ -14,7 +14,8 @@ Write-Host "Created requirements file"
 # Create an array of files to add to Git repository
 $files = @(
     ".\UploadFiles",
-    "Push-GitChanges.ps1"
+    "Push-GitChanges.ps1",
+    ".vscode"
 )
 # Add specified files to Git repository
 foreach ($file in $files) {
