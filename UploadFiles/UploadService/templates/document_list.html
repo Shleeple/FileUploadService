@@ -1,30 +1,50 @@
-<!-- yourapp/templates/yourapp/document_list.html -->
+<!-- templates/yourapp/document_list.html -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document List</title>
-</head>
-<body>
-    <h2>Uploaded Documents</h2>
+{% extends 'base.html' %}
 
+
+
+{% block content %}
+    <h2>Document List</h2>
     {% if documents %}
-        <ul>
+        <table>
+        <thead>
+            <tr>
+            <th>Title</th>
+            <th>Document Type</th>
+            <th>ISD</th>
+            <th>Word Count</th>
+            <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for document in documents %}
-                <li>
-                    <strong>Title:</strong> {{ document.title }}<br>
-                    <strong>Document Type:</strong> {{ document.document_type }}<br>
-                    <strong>ISD:</strong> {{ document.isd }}<br>
-                    <strong>Word Count:</strong> {{ document.word_count }}<br>
-                    <!-- Add more fields as needed -->
-                    <a href="{{ document.document.url }}" target="_blank">Download Document</a>
-                </li>
+            <tr>
+                <td>{{ document.title }}</td>
+                <td>{{ document.document_type }}</td>
+                <td>{{ document.isd }}</td>
+                <td>{{ document.word_count }}</td>
+                <!-- Add a button to trigger the download -->
+                <td>
+                <button class="download-btn" data-document-id="{{ document.id }}">Download</button>
+                </td>
+            </tr>
             {% endfor %}
-        </ul>
+        </tbody>
+        </table>
+
+        <script>
+        // Add a script to handle download button clicks
+        document.querySelectorAll('.download-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+            var documentId = button.getAttribute('data-document-id');
+
+            // Redirect to the download URL for the specific document
+            window.location.href = '{% url "download_document" document_id=0 %}'.replace('0', documentId);
+            });
+        });
+        </script>
     {% else %}
         <p>No documents uploaded.</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

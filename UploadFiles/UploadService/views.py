@@ -5,11 +5,12 @@ from .forms import DocumentForm
 from docx import Document as DocxDocument
 import re
 import os
+import io
 import requests
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -44,39 +45,47 @@ def upload_document(request):
                 unique_id=unique_id,
             )
 
-            return render(request, 'upload_document.html', {'document': document})
+            return redirect('document_list')
     else:
         form = DocumentForm()
 
     return render(request, 'upload_document.html', {'form': form})
 
-# request a downloaded document
+
 @login_required
 def download_document(request, document_id):
-    document = Document.objects.get(id=document_id)
+    document = get_object_or_404(Document, pk=document_id)
 
-    # Perform processing on the document (you'll need to implement this)
-    processed_file_path = process_document(document)
-
-    # Use Django's FileResponse to serve the processed file for download
-    with open(processed_file_path, 'rb') as processed_file:
-        response = HttpResponse(processed_file.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        response['Content-Disposition'] = f'attachment; filename={document.title}_processed.docx'
-    
-    # Delete the processed file after serving
-    os.remove(processed_file_path)
+    if document.processed_document:
+        # Download the processed document
+        processed_document = document.processed_document.processed_document_file
+        response = HttpResponse(processed_document.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(processed_document.name)}"'
+    else:
+        # Download the original document
+        original_document = document.document_file
+        response = HttpResponse(original_document.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(original_document.name)}"'
 
     return response
 
 
+@login_required
+def document_list(request):
+    documents = Document.objects.filter(user=request.user)  # Assuming you want to show only documents for the logged-in user
+    return render(request, 'document_list.html', {'documents': documents})
+
+
 def extract_metadata(document_file):
+    file_name = os.path.basename(document_file.name)
+    print(f"File_name = {file_name}")
     # Use regex to extract metadata from the document title
-    match = re.match(r'(?P<isd>[A-Z0-9]+)_(?P<word_count>\d+)_(?P<document_type>[A-Za-z]+)', document_file.name)
+    match = re.match(r'.*(\w{2,3}ISD).*(FIE|ARD|IEP).*\s+(\d+) words', os.path.basename(document_file.name))
     
     if match:
-        isd = match.group('isd')
-        word_count = int(match.group('word_count'))
-        document_type = match.group('document_type')
+        isd = match.group(1)  # Select the first group
+        word_count = int(match.group(3))  # Select the third group
+        document_type = match.group(2)  # Select the second group
         return isd, word_count, document_type
     else:
         # Default values if regex doesn't match
@@ -84,18 +93,13 @@ def extract_metadata(document_file):
 
 
 def process_document(document):
+    # Load the original document using python-docx
+    original_doc = Document(document.path)
+
     # Implement your processing logic here
-    # For example, you might use the python-docx library to modify the document
-    # Save the processed document to a new file
-    processed_file_path = os.path.join(settings.MEDIA_ROOT, 'processed', f"{document.title}_processed.docx")
+    # For example, you might modify the document content
 
-    # This is a placeholder, you'll need to implement the actual processing
-    # Here, we're just copying the original file to the processed file path
-    with open(document.document_file.path, 'rb') as original_file:
-        with open(processed_file_path, 'wb') as processed_file:
-            processed_file.write(original_file.read())
-
-    return processed_file_path
+    return original_doc.unique_id
 
 
 def user_login_view(request):
@@ -112,8 +116,3 @@ def user_login_view(request):
 
 def home(request):
     return render(request, 'home.html')
-
-
-def document_list(request):
-    documents = Document.objects.filter(user=request.user)  # Assuming you want to show only documents for the logged-in user
-    return render(request, 'document_list.html', {'documents': documents})

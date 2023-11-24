@@ -1,6 +1,6 @@
 {
-    "workbench.colorTheme": "Tomorrow Night Blue",
+    "workbench.colorTheme": "Tokyo Night",
     "redhat.telemetry.enabled": false,
-    "window.zoomLevel": 0,
+    "window.zoomLevel": 1,
     "git.autofetch": true
 }
