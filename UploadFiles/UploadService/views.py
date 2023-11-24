@@ -1,3 +1,4 @@
+# import requirements
 from .models import Document
 from .forms import DocumentForm
 
@@ -49,7 +50,7 @@ def upload_document(request):
 
     return render(request, 'upload_document.html', {'form': form})
 
-
+# request a downloaded document
 @login_required
 def download_document(request, document_id):
     document = Document.objects.get(id=document_id)
