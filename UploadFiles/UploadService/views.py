@@ -1,12 +1,16 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Document
 from .forms import DocumentForm
-import re
+
 from docx import Document as DocxDocument
+import re
 import os
-from django.conf import settings
 import requests
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 # request to upload a document
@@ -15,28 +19,31 @@ def upload_document(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            user = request.user
-            title = form.cleaned_data['title']
-            document_file = form.cleaned_data['document_file']
+            # Get the uploaded file
+            uploaded_file = request.FILES['document_file']
+
+            # Truncate the original filename to fit within the allowed length
+            max_length = 100  # Adjust this based on your requirements
+            original_filename = uploaded_file.name[:max_length]
 
             # Extract metadata using regex and docx library
-            isd, word_count, document_type = extract_metadata(document_file)
+            isd, word_count, document_type = extract_metadata(uploaded_file)
 
             # Generate a unique ID (you might want to make this more sophisticated)
-            unique_id = f"{user.username}_{title}_{hash(document_file.name)}"
+            unique_id = f"{request.user.username}_{original_filename}_{hash(uploaded_file.name)}"
 
             # Save to the database
-            Document.objects.create(
-                user=user,
-                title=title,
-                document_file=document_file,
+            document = Document.objects.create(
+                user=request.user,
+                title=original_filename,
+                document_file=uploaded_file,
                 isd=isd,
                 word_count=word_count,
                 document_type=document_type,
                 unique_id=unique_id,
             )
 
-            return redirect('document_list')  # Redirect to a page showing a list of uploaded documents
+            return render(request, 'upload_document.html', {'document': document})
     else:
         form = DocumentForm()
 
@@ -88,3 +95,24 @@ def process_document(document):
             processed_file.write(original_file.read())
 
     return processed_file_path
+
+
+def user_login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('upload_document')  # Redirect to the upload document page after login
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+
+def home(request):
+    return render(request, 'home.html')
+
+
+def document_list(request):
+    documents = Document.objects.filter(user=request.user)  # Assuming you want to show only documents for the logged-in user
+    return render(request, 'document_list.html', {'documents': documents})
