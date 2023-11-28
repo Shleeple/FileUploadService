@@ -27,6 +27,8 @@ def upload_document(request):
 
             # Extract metadata using regex
             isd, word_count, document_type, document_name = extract_metadata(uploaded_file)
+            uploaded_file.name = document_name + ".docx"
+
             # Generate a unique ID (you might want to make this more sophisticated)
             unique_id = f"{request.user.username}_{hash(document_name)}"
 
@@ -82,7 +84,7 @@ def extract_metadata(document_file):
     # set regex to extract each value
     isd_regex = r'(\w{1,4}ISD)'
     word_count_regex = r'(\d+)[\s_]words'
-    document_type_regex = r'(FIE|ARD|IEP)'
+    document_type_regex = r'(FIE|ARD|IEP|Goals)'
 
     # Use regex to extract metadata from the document title
     isd_match = re.search(isd_regex, os.path.basename(document_file.name))

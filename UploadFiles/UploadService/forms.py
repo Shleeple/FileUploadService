@@ -16,7 +16,7 @@ class DocumentForm(forms.ModelForm):
         
         """
         # check if the file name follows a specific naming convension using regex
-        pattern = re.compile(r'^[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+\.docx$')
+        pattern = re.compile(r'(\w{1,4}ISD)|(\d+)[\s_]words|(FIE|ARD|IEP|Goals)')
         if not pattern.match(document_file.name):
             raise forms.ValidationError('Invalid file name. Follow the specified naming convention.')
         """

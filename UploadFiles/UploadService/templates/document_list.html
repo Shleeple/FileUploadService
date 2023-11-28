@@ -17,7 +17,7 @@
         <tbody>
             {% for document in documents %}
             <tr>
-                <td><time datetime="{{ document.upload_date }}"></time></td>
+                <td>{{ document.upload_date }}</td>
                 <td>{{ document.document_type }}</td>
                 <td>{{ document.isd }}</td>
                 <td>{{ document.word_count }}</td>
