@@ -5,9 +5,7 @@ from .forms import DocumentForm
 from docx import Document as DocxDocument
 import re
 import os
-import pytz
 
-from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -31,7 +29,8 @@ def upload_document(request):
 
             # Generate a unique ID (you might want to make this more sophisticated)
             unique_id = f"{request.user.username}_{hash(document_name)}"
-
+            
+            # set the time zone
             now = timezone.now()
 
             # Save to the database
