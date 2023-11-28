@@ -1,8 +1,5 @@
-<!-- templates/yourapp/document_list.html -->
 
 {% extends 'base.html' %}
-
-
 
 {% block content %}
     <h2>Document List</h2>
@@ -10,23 +7,22 @@
         <table>
         <thead>
             <tr>
-            <th>Title</th>
-            <th>Document Type</th>
-            <th>ISD</th>
-            <th>Word Count</th>
-            <th>Download</th>
+                <th>Upload Date</th>
+                <th>Document Type</th>
+                <th>ISD</th>
+                <th>Word Count</th>
+                <th>Download</th>
             </tr>
         </thead>
         <tbody>
             {% for document in documents %}
             <tr>
-                <td>{{ document.title }}</td>
+                <td><time datetime="{{ document.upload_date }}"></time></td>
                 <td>{{ document.document_type }}</td>
                 <td>{{ document.isd }}</td>
                 <td>{{ document.word_count }}</td>
-                <!-- Add a button to trigger the download -->
                 <td>
-                <button class="download-btn" data-document-id="{{ document.id }}">Download</button>
+                    <button class="download-btn" data-document-id="{{ document.id }}">Download</button>
                 </td>
             </tr>
             {% endfor %}
@@ -34,12 +30,9 @@
         </table>
 
         <script>
-        // Add a script to handle download button clicks
         document.querySelectorAll('.download-btn').forEach(function(button) {
             button.addEventListener('click', function() {
             var documentId = button.getAttribute('data-document-id');
-
-            // Redirect to the download URL for the specific document
             window.location.href = '{% url "download_document" document_id=0 %}'.replace('0', documentId);
             });
         });
