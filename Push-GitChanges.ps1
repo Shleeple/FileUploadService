@@ -1,3 +1,8 @@
+<#
+The purpose of this script is to push changes from 
+the local repository to the remote repository.
+#>
+
 param(
     #[Parameter(Mandatory=$true)]
     [string]$m
@@ -15,6 +20,7 @@ Write-Host "Created requirements file"
 $files = @(
     ".\UploadFiles",
     "Push-GitChanges.ps1",
+    "Pull-GitChanges.ps1",
     ".vscode"
 )
 # Add specified files to Git repository
