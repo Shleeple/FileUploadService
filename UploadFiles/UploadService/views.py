@@ -15,7 +15,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 
-# // FIXME - Style the upload document page
+# // FIXME - Style the upload document page (change to see if changes worked)
 # request to upload a document
 @login_required
 def upload_document(request):
