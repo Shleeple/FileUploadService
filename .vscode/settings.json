@@ -1,6 +1,8 @@
 {
-    "workbench.colorTheme": "Tokyo Night",
+    "workbench.colorTheme": "Tomorrow Night Blue",
     "redhat.telemetry.enabled": false,
     "window.zoomLevel": 1,
-    "git.autofetch": true
+    "git.autofetch": true,
+    "todo-tree.tree.showBadges": false,
+    "git.ignoreLimitWarning": true
 }
