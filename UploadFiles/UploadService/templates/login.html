@@ -1,10 +1,20 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-{% endblock %}
+{% load static %}
+{<h2>Login</h2>
+  
+  <div class="login-container">
+    <!-- 3/4 of the screen with a picture from static/pictures/login -->
+    <div class="login-picture">
+      <img src="{% static 'pictures/login/login_picture.png' %}" alt="Login Picture">
+    </div>
+    
+    <!-- 1/4 left column with login form -->
+    <div class="login-form">
+      <!-- ... Login form content ... -->
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+  

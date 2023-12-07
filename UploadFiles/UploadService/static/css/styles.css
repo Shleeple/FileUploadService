@@ -42,3 +42,16 @@ nav a:hover {
 .container {
     padding: 20px;
 }
+
+.login-container {
+    display: flex; /* Use flexbox for layout */
+}
+
+.login-picture {
+    flex: 3; /* Take up 3/4 of the available space */
+}
+
+.login-form {
+    flex: 1; /* Take up 1/4 of the available space */
+    padding: 20px; /* Add some padding for better aesthetics */
+}
