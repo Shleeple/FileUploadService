@@ -8,7 +8,7 @@ Write-Host "Pulling changes from remote repo to local repo"
 
 # Pull changes from remote repository
 try {
-    git pull origin main
+    git pull
     Write-Host "Successfully pulled changes from remote repo to local repo"
 } 
 catch {
