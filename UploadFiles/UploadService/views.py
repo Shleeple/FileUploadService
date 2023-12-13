@@ -15,19 +15,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 
-# // FIXME - Style the upload document page (change to see if changes worked)
 # request to upload a document
 @login_required
 def upload_document(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            # // TODO - Add clean_document_file from forms.py
             # Get the uploaded file
             uploaded_file = request.FILES['document_file']
 
             # Extract metadata using regex
-            isd, word_count, document_type, document_name = extract_metadata(uploaded_file)
+            document_type, isd, word_count, document_name = extract_metadata(uploaded_file)
             # Generate a unique ID (you might want to make this more sophisticated)
             unique_id = f"{request.user.username}_{hash(document_name)}"
 
@@ -53,7 +51,6 @@ def upload_document(request):
     return render(request, 'upload_document.html', {'form': form})
 
 
-# // FIXME - Style upload document page, embed in document processing page
 @login_required
 def download_document(request, document_id):
     document = get_object_or_404(Document, pk=document_id)
@@ -72,7 +69,6 @@ def download_document(request, document_id):
     return response
 
 
-# // TODO - Add a view that shows progress in the processing of a document, then allows download
 def process_document(document):
     # Load the original document using python-docx
     original_doc = Document(document.path)
@@ -83,32 +79,42 @@ def process_document(document):
     return original_doc.unique_id
 
 
-# // FIXME - Style document list page
 @login_required
 def document_list(request):
     documents = Document.objects.filter(user=request.user)  # Assuming you want to show only documents for the logged-in user
     return render(request, 'document_list.html', {'documents': documents})
 
 
-# // FIXME - Fix regex to extract document metadata correctly
 def extract_metadata(document_file):
     file_name = os.path.basename(document_file.name)
     print(f"File_name = {file_name}")
     # Use regex to extract metadata from the document title
-    match = re.match(r'.*(\w{1,4}ISD).*(FIE|ARD|IEP).*(\d+)[\s_]*words', os.path.basename(document_file.name))
+    type_match = re.search(r'(FIE|ARD|IEP)', os.path.basename(document_file.name))
+    isd_match = re.search(r'([A-Z]{1,5})ISD', os.path.basename(document_file.name))
+    count_match = re.search(r'(\d+)[\s_]*[wW]ords', os.path.basename(document_file.name))
     
-    if match:
-        isd = match.group(1)  # Select the first group
-        word_count = int(match.group(3))  # Select the third group
-        document_type = match.group(2)  # Select the second group
-        document_name = f"{document_type}_{isd}_{word_count}"
-        return isd, word_count, document_type, document_name
+    # Check each, and if there was no match, set the value to 'Unknown'
+    if type_match:
+        document_type = type_match.group(0)
     else:
-        # Default values if regex doesn't match
-        return 'Unknown', 0, 'Unknown', 'Unknown'
+        document_type = 'Unknown'
+    
+    if isd_match:
+        isd = isd_match.group(1)
+    else:
+        isd = 'Unknown'
+    
+    if count_match:
+        word_count = count_match.group(1)
+    else:
+        word_count = 0
+    
+    # set the document name to the a mix of the document type, isd, and word count
+    document_name = f"{document_type}_{isd}_{word_count}"
+    
+    return document_type, isd, word_count, document_name
 
 
-# // FIXME - Style login page
 def user_login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -121,6 +127,5 @@ def user_login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
-# // TODO - Create the landing page where the user can select whether to login or
 def home(request):
     return render(request, 'home.html')
