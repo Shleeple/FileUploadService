@@ -1,20 +1,37 @@
-{% load static %}
-{<h2>Login</h2>
-  
-  <div class="login-container">
-    <!-- 3/4 of the screen with a picture from static/pictures/login -->
-    <div class="login-picture">
-      <img src="{% static 'pictures/login/login_picture.png' %}" alt="Login Picture">
+{% load static %}  
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <title>Home</title>
+      <link rel="stylesheet" href="{% static 'home-login.css' %}">
+  </head>
+
+  <style>
+    html{
+        background-image: url("{% static 'earth.jpg' %}");
+        background-size: 100%;
+    }
+  </style>
+
+  <body>
+    <div class="login-container">
+      <div class="login-form">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" style="background-color: #142C50;
+            color: white;
+            border-radius: 10px;
+            border-color: #DDE3FD;
+            padding: 10px;
+            font-size: medium;
+            font-weight: bold;
+            position: relative;
+            left: 40%;">Login
+          </button>
+        </form>
+      </div>
     </div>
-    
-    <!-- 1/4 left column with login form -->
-    <div class="login-form">
-      <!-- ... Login form content ... -->
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  </div>
-  
+  </body>
+</html>

@@ -89,6 +89,7 @@ def document_list(request):
     documents = Document.objects.filter(user=request.user)  # Assuming you want to show only documents for the logged-in user
     return render(request, 'document_list.html', {'documents': documents})
 
+
 # // FIXME - Fix regex to extract document metadata correctly
 def extract_metadata(document_file):
     file_name = os.path.basename(document_file.name)

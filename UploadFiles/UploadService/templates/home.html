@@ -1,17 +1,25 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to Your App</title>
+        <title>Home</title>
+        <link rel="stylesheet" href="{% static 'home-login.css' %}">
     </head>
+
+    <style>
+        html{
+            background-image: url("{% static 'earth.jpg' %}");
+            background-size: 100%;
+        }
+    </style>
+    
     <body>
-        <h1>Welcome to Your App</h1>
-        <p>This is the landing page. Click the button below to login.</p>
-        <a href="{% url 'login' %}">
-            <button>Login</button>
-        </a>
+        <div class="home-button">
+            <form action="post">
+                <a href="login" style="color: white;">Login</a>
+            </form>
+        </div>
     </body>
 </html>

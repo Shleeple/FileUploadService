@@ -1,0 +1,65 @@
+input {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid #DDE3FD;
+    background-color: #0E182C;
+    color:#DDE3FD;
+}
+
+label {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #0E182C;
+    color:#DDE3FD;
+}
+
+#earth {
+    width: 100%;
+    height: 80%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.login-container {
+    margin: auto;
+    margin-top: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+    width: 400px;
+    background-color: #142C50;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #DDE3FD;
+}
+
+.login-button{
+    width: fit-content;
+    background-color: #142C50;
+    color: white;
+    border-radius: 10px;
+    border-color: #DDE3FD;
+    padding: 10px;
+    font-size: medium;
+    font-weight: bold;
+    align-self: center;
+}
+
+.home-button{
+    position: fixed;
+    top: 100px;
+    right: 290px;
+    width: fit-content;
+    background-color: #142C50;
+    color: white;
+    border-radius: 10px;
+    border-color: #DDE3FD;
+    padding: 10px;
+    font-size: medium;
+    font-weight: bold;
+    align-self: center;
+}
