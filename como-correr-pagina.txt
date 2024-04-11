@@ -1,0 +1,15 @@
+Esta página web es un proyecto de Django, para correrla en un puerto local se deben hacer una serie de pasos:
+
+1. Instalar python si aun no se tiene instalado
+2. Crear un ambiente virtual de python en la misma carpeta donde se extrajo este .txt (misma donde se encuentra UploadFiles)
+	cd carpeta\de\extraccion
+	python -m venv .venv
+3. Activar el ambiente virtual de python
+	.venv\scripts\activate
+4. Instalar las dependencias necesarias de django
+	pip install django
+4. Entrar al folder del proyecto, y activar el servidor
+	cd UploadFiles
+	python manage.py runserver
+5. Entrar en un navegador web a http://127.0.0.1:8000/
+6. Para hacer login se requiere un usuario y contraseña, proporcinado por el admin de la página.

@@ -26,6 +26,7 @@ def upload_document(request):
 
             # Extract metadata using regex
             document_type, isd, word_count, document_name = extract_metadata(uploaded_file)
+            uploaded_file.name = document_name + '.docx'
             # Generate a unique ID (you might want to make this more sophisticated)
             unique_id = f"{request.user.username}_{hash(document_name)}"
 
